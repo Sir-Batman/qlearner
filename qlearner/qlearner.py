@@ -34,7 +34,7 @@ class QLearner(object):
     def updateQvalue(self, previous_state, selected_action, current_state, reward):
         old_q = self._q_table[previous_state][selected_action]
         max_q = self.getMaxQValue(current_state)
-        new_q = old_q + alpha*(reward + gamma*max_q - old_q)
+        new_q = old_q + self.alpha*(reward + self.gamma*max_q - old_q)
         self._q_table[previous_state][selected_action] = new_q
 
     def selectAction(self, state):
@@ -48,6 +48,7 @@ class QLearner(object):
         """
         if random.random() < self.epsilon:
             # Select random action with probabilty epsilon
+            print("Random action taken")
             return self.randomAction()
         else:
             # Select most valueable action
@@ -55,7 +56,7 @@ class QLearner(object):
 
     def randomAction(self):
         """ Returns a random action from the action space. """
-        return random.randint(0, self.numActions)
+        return random.randint(0, self.num_actions-1)
 
     def getMaxValueAction(self, state):
         return np.argmax(self._q_table[state])
