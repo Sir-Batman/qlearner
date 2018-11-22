@@ -19,19 +19,30 @@ class QLearner(object):
     Q Learning Agent Class.
     Contains the Q Table, update functions, and action selection.
     """
-    def __init__(self, num_states, num_actions, alpha=0.1, gamma=0.9, epsilon=0.1):
+    def __init__(self, num_states=0, num_actions=0, alpha=0.1, gamma=0.9, epsilon=0.1):
         """
         """
         self.num_states = num_states
         self.num_actions = num_actions
-        self._q_table = np.zeros((num_states, num_actions))
+        # Assume that no states means we will dynamically discover the states
+        if num_states == 0:
+            self._q_table = {}
+        else:
+            self._q_table = np.zeros((num_states, num_actions))
 
         # Learning Parameters
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
 
-    def updateQvalue(self, previous_state, selected_action, current_state, reward):
+    def checkState(self, state):
+        if type(self._q_table) is dict:
+            if state in self._q_table:
+                pass
+            else:
+                self._q_table[state] = [1]*self.num_actions
+
+    def updateQValue(self, previous_state, selected_action, current_state, reward):
         old_q = self._q_table[previous_state][selected_action]
         max_q = self.getMaxQValue(current_state)
         new_q = old_q + self.alpha*(reward + self.gamma*max_q - old_q)
@@ -48,7 +59,7 @@ class QLearner(object):
         """
         if random.random() < self.epsilon:
             # Select random action with probabilty epsilon
-            print("Random action taken")
+            #print("Random action taken")
             return self.randomAction()
         else:
             # Select most valueable action
