@@ -13,6 +13,7 @@ This agent has
 
 import numpy as np
 import random
+import pickle
 
 class QLearner(object):
     """
@@ -83,20 +84,20 @@ class QLearner(object):
         best_action = self.getMaxValueAction(state)
         return self._q_table[state][best_action]
 
-    def saveQTable(self):
+    def saveQTable(self, filename="qtable.pkl"):
         """
-        Saves a Q Table as a numpy, either as a pickle or a numpy csv.
+        Quick & dirty, saves a Q Table as a pickle file
         """
-        raise NotImplemented
+        with open(filename, 'wb') as f:
+            pickle.dump(self._q_table, f)
 
-    def loadQTable(self, tablefile=None, numpyarray=None):
+
+    def loadQTable(self, tablefile="qtable.pkl"):
         """
-        Loads the Q Table into the agent from file (pickle?) or numpy array
+        Loads the Q Table into the agent from file (pickle)
 
         Args: 
             tablefile: a file object pointing to a pickle of the Q Table
-            numpyarray: a numpy array, in memory, of the Q Table
         """
-        raise NotImplemented
-
-
+        with open(filename, 'rb') as f:
+            self._q_table = pickle.load(f)
