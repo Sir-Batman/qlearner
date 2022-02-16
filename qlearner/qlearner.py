@@ -15,11 +15,13 @@ import numpy as np
 import random
 import pickle
 
+
 class QLearner(object):
     """
     Q Learning Agent Class.
     Contains the Q Table, update functions, and action selection.
     """
+
     def __init__(self, num_states=0, num_actions=0, alpha=0.1, gamma=0.9, epsilon=0.1):
         """
         """
@@ -41,12 +43,12 @@ class QLearner(object):
             if state in self._q_table:
                 pass
             else:
-                self._q_table[state] = [1]*self.num_actions
+                self._q_table[state] = [1] * self.num_actions
 
     def updateQValue(self, previous_state, selected_action, current_state, reward):
         old_q = self._q_table[previous_state][selected_action]
         max_q = self.getMaxQValue(current_state)
-        new_q = old_q + self.alpha*(reward + self.gamma*max_q - old_q)
+        new_q = old_q + self.alpha * (reward + self.gamma * max_q - old_q)
         self._q_table[previous_state][selected_action] = new_q
 
     def selectAction(self, state):
@@ -60,7 +62,7 @@ class QLearner(object):
         """
         if random.random() < self.epsilon:
             # Select random action with probabilty epsilon
-            #print("Random action taken")
+            # print("Random action taken")
             return self.randomAction()
         else:
             # Select most valueable action
@@ -68,7 +70,7 @@ class QLearner(object):
 
     def randomAction(self):
         """ Returns a random action from the action space. """
-        return random.randint(0, self.num_actions-1)
+        return random.randint(0, self.num_actions - 1)
 
     def getMaxValueAction(self, state):
         return np.argmax(self._q_table[state])
@@ -91,7 +93,6 @@ class QLearner(object):
         with open(filename, 'wb') as f:
             pickle.dump(self._q_table, f)
 
-
     def loadQTable(self, tablefile="qtable.pkl"):
         """
         Loads the Q Table into the agent from file (pickle)
@@ -99,5 +100,5 @@ class QLearner(object):
         Args: 
             tablefile: a file object pointing to a pickle of the Q Table
         """
-        with open(filename, 'rb') as f:
+        with open(tablefile, 'rb') as f:
             self._q_table = pickle.load(f)
